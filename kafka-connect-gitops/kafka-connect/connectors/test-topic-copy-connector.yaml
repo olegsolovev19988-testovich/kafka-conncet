@@ -3,7 +3,7 @@ kind: KafkaConnector
 metadata:
   name: test-topic-copy
   labels:
-    strimzi.io/cluster: kafka-connect
+    strimzi.io/cluster: kafka-connect-test
 spec:
   class: org.apache.kafka.connect.mirror.MirrorSourceConnector
   tasksMax: 1
