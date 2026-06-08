@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: apply-test-copy-connector
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: apply
+          image: curlimages/curl
+          command:
+            - sh
+            - -c
+            - |
+              echo "Applying connector..."
+
+              # delete if exists (idempotent GitOps)
+              curl -s -X DELETE http://kafka-connect:8083/connectors/test-copy || true
+
+              # create connector
+              curl -s -X POST http://kafka-connect:8083/connectors \
+                -H "Content-Type: application/json" \
+                -d '{
+                  "name": "test-topic-copy",
+                  "config": {
+                    "connector.class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
+                    "tasks.max": "1",
+                    "topics": "test-topic",
+                    "source.cluster.bootstrap.servers": "10.0.2.9:9092",
+                    "target.cluster.bootstrap.servers": "10.0.2.9:9092"
+                  }
+                }'

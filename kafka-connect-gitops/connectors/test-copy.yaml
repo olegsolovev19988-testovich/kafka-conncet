@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-connector-test-copy
+data:
+  connector.json: |
+    {
+      "name": "test-topic-copy",
+      "config": {
+        "connector.class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
+        "tasks.max": "1",
+        "topics": "test-topic",
+        "source.cluster.bootstrap.servers": "10.0.2.9:9092",
+        "target.cluster.bootstrap.servers": "10.0.2.9:9092"
+      }
+    }
