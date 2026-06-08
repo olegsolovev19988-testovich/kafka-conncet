@@ -16,7 +16,7 @@ spec:
         - name: akhq
           image: tchiotludo/akhq:latest
           ports:
-            - containerPort: 8088
+            - containerPort: 8080
           env:
             - name: MICRONAUT_CONFIG_FILES
               value: "/app/application.yml"
