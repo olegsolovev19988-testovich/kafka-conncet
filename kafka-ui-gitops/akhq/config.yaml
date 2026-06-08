@@ -8,4 +8,4 @@ data:
       connections:
         local-kafkas:
           properties:
-            bootstrap.servers: "10.0.2.5:9092"
+            bootstrap.servers: "10.0.2.9:9092"
