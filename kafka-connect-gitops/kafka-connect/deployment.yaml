@@ -19,7 +19,7 @@ spec:
             - containerPort: 8083
           env:
             - name: CONNECT_BOOTSTRAP_SERVERS
-              value: "10.0.2.6:9092"
+              value: "10.0.2.9:9092"
             - name: CONNECT_REST_PORT
               value: "8083"
             - name: CONNECT_GROUP_ID
