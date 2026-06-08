@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: akhq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: akhq
+  template:
+    metadata:
+      labels:
+        app: akhq
+    spec:
+      containers:
+        - name: akhq
+          image: tchiotludo/akhq:latest
+          ports:
+            - containerPort: 8088
+          env:
+            - name: MICRONAUT_CONFIG_FILES
+              value: "/app/application.yml"
+          volumeMounts:
+            - name: config
+              mountPath: /app/application.yml
+              subPath: application.yml
+      volumes:
+        - name: config
+          configMap:
+            name: akhq-config

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: akhq-config
+data:
+  application.yml: |
+    akhq:
+      connections:
+        local-kafkas:
+          properties:
+            bootstrap.servers: "10.0.2.5:9092"
