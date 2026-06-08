@@ -1,3 +1,4 @@
 resources:
   - deployment.yaml
   - service.yaml
+  - connectors/test-topic-copy-connector.yaml
