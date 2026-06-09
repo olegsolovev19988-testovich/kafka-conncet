@@ -3,19 +3,18 @@ kind: ConfigMap
 metadata:
   name: kafka-connect-config
 data:
-  connect-distributed.properties: |
-    bootstrap.servers=10.0.2.9:9092
-    rest.port=8083
-    rest.advertised.host.name=kafka-connect
-    group.id=connect-cluster
-    config.storage.topic=connect-configs
-    offset.storage.topic=connect-offsets
-    status.storage.topic=connect-status
-    config.storage.replication.factor=1
-    offset.storage.replication.factor=1
-    status.storage.replication.factor=1
-    key.converter=org.apache.kafka.connect.json.JsonConverter
-    value.converter=org.apache.kafka.connect.json.JsonConverter
-    key.converter.schemas.enable=false
-    value.converter.schemas.enable=false
-    plugin.path=/usr/share/java,/usr/share/confluent-hub-components
+  CONNECT_BOOTSTRAP_SERVERS: "10.0.2.9:9092"
+  CONNECT_REST_PORT: "8083"
+  CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+  CONNECT_GROUP_ID: "connect-cluster"
+  CONNECT_CONFIG_STORAGE_TOPIC: "connect-configs"
+  CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
+  CONNECT_STATUS_STORAGE_TOPIC: "connect-status"
+  CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+  CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+  CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+  CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+  CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+  CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+  CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+  CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
