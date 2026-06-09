@@ -2,37 +2,84 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kafka-connect
+  labels:
+    app: kafka-connect
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: kafka-connect
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   template:
     metadata:
       labels:
         app: kafka-connect
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9101"
+        prometheus.io/scheme: http
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: kafka-connect
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: kafka-connect
           image: confluentinc/cp-kafka-connect:7.5.0
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8083
+            - name: rest
+              containerPort: 8083
+            - name: jmx
+              containerPort: 9101
           env:
-            - name: CONNECT_BOOTSTRAP_SERVERS
-              value: "10.0.2.9:9092"
-            - name: CONNECT_REST_PORT
-              value: "8083"
-            - name: CONNECT_GROUP_ID
-              value: "connect-cluster"
-            - name: CONNECT_CONFIG_STORAGE_TOPIC
-              value: "connect-configs"
-            - name: CONNECT_OFFSET_STORAGE_TOPIC
-              value: "connect-offsets"
-            - name: CONNECT_STATUS_STORAGE_TOPIC
-              value: "connect-status"
-            - name: CONNECT_KEY_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-            - name: CONNECT_VALUE_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-            - name: CONNECT_REST_ADVERTISED_HOST_NAME
-              value: "kafka-connect"
+            - name: KAFKA_JMX_PORT
+              value: "9101"
+            - name: KAFKA_JMX_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: connect-config
+              mountPath: /etc/kafka/connect-distributed.properties
+              subPath: connect-distributed.properties
+              readOnly: true
+          startupProbe:
+            httpGet:
+              path: /connector-plugins/
+              port: rest
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /connector-plugins/
+              port: rest
+            periodSeconds: 10
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /connector-plugins/
+              port: rest
+            periodSeconds: 10
+            failureThreshold: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      volumes:
+        - name: connect-config
+          configMap:
+            name: kafka-connect-config
