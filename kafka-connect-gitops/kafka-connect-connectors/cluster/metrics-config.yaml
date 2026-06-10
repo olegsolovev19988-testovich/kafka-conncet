@@ -8,6 +8,6 @@ data:
   metrics-config.yml: |
     lowercaseOutputName: true
     rules:
-      - pattern: kafka.connect<type=connect-worker-metrics>([^:]+):
-          name: kafka_connect_worker_$1
-          type: GAUGE
+      - pattern: "kafka.connect<type=connect-worker-metrics>([^:]+):"
+        name: kafka_connect_worker_$1
+        type: GAUGE
