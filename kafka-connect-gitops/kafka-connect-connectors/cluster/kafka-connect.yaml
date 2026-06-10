@@ -18,8 +18,7 @@ spec:
   build:
     output:
       type: docker
-      image: quay.io/strimzi/kafka:1.0.0-kafka-4.1.0
-
+      image: docker.io/solovevoe/kafka-connect:1.0.0
     plugins:
       - name: debezium-postgres
         artifacts:
@@ -28,8 +27,8 @@ spec:
 
       - name: jdbc
         artifacts:
-          - type: jar
-            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.7.13/kafka-connect-jdbc-10.7.13.jar
+          - type: zip
+            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.7.13/kafka-connect-jdbc-10.7.13.zip
 
   config:
     offset.storage.replication.factor: 1
