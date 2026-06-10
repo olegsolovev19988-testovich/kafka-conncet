@@ -7,12 +7,29 @@ metadata:
 spec:
   version: 4.1.0
   replicas: 1
-  image: docker.io/solovevoe/kafka-connect:1.0.0
-  bootstrapServers: 10.0.2.9:9092
+
   groupId: connect-cluster
   offsetStorageTopic: connect-offsets
   configStorageTopic: connect-configs
   statusStorageTopic: connect-status
+
+  bootstrapServers: 10.0.2.9:9092
+
+  build:
+    output:
+      type: docker
+      image: quay.io/strimzi/kafka:1.0.0-kafka-4.1.0
+
+    plugins:
+      - name: debezium-postgres
+        artifacts:
+          - type: zip
+            url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.4.2.Final/debezium-connector-postgres-2.4.2.Final-plugin.zip
+
+      - name: jdbc
+        artifacts:
+          - type: zip
+            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.7.6/kafka-connect-jdbc-10.7.6.zip
 
   config:
     offset.storage.replication.factor: 1
@@ -47,8 +64,6 @@ spec:
 
   template:
     pod:
-      imagePullSecrets:
-        - name: dockerhub-credentials
       metadata:
         annotations:
           prometheus.io/scrape: "true"
