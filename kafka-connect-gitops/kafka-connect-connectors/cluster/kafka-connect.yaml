@@ -10,7 +10,7 @@ spec:
   
   image: docker.io/oesolovev/kafka-connect:1.0.0
   imagePullSecrets:
-    - name: registry-credentials
+    - name: dockerhub-credentials
 
   bootstrapServers: 10.0.2.9:9092
 
