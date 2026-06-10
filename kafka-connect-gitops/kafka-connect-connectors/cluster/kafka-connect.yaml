@@ -7,6 +7,10 @@ metadata:
 spec:
   version: 4.1.0
   replicas: 1
+  
+  image: docker.io/oesolovev/kafka-connect:1.0.0
+  imagePullSecrets:
+    - name: registry-credentials
 
   bootstrapServers: 10.0.2.9:9092
 
@@ -26,21 +30,6 @@ spec:
     value.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: "false"
     value.converter.schemas.enable: "false"
-
-  build:
-    output:
-      type: docker
-      image: docker.io/solovevoe/kafka-connect:4.1.0
-      pushSecret: dockerhub-credentials
-    plugins:
-      - name: debezium-postgres
-        artifacts:
-          - type: tgz
-            url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.7.0.Final/debezium-connector-postgres-2.7.0.Final-plugin.tar.gz
-      - name: jdbc
-        artifacts:
-          - type: zip
-            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.7.4/kafka-connect-jdbc-10.7.4.zip
 
   resources:
     requests:
