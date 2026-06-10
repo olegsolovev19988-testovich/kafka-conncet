@@ -14,7 +14,7 @@ spec:
   configStorageTopic: connect-configs
   statusStorageTopic: connect-status
 
-  bootstrapServers: 10.0.2.9:9092
+  bootstrapServers: 10.0.2.7:9092
 
   config:
     offset.storage.replication.factor: 1
