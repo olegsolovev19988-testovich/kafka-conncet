@@ -18,7 +18,8 @@ spec:
   build:
     output:
       type: docker
-      image: docker.io/solovevoe/kafka-connect:1.0.0
+      image: docker.io/solovevoe/kafka-connect:1.0.1
+
     plugins:
       - name: debezium-postgres
         artifacts:
