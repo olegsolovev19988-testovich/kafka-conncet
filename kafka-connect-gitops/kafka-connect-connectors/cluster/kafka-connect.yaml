@@ -15,6 +15,9 @@ spec:
   configStorageTopic: connect-configs
   statusStorageTopic: connect-status
 
+  imagePullSecrets:
+    - name: dockerhub-credentials
+
   config:
     offset.storage.replication.factor: 1
     config.storage.replication.factor: 1
@@ -27,11 +30,12 @@ spec:
   build:
     output:
       type: docker
-      image: confluentinc/cp-kafka-connect:7.5.0
+      image: docker.io/solovevoe/kafka-connect:4.1.0
+      pushSecret: dockerhub-credentials
     plugins:
       - name: debezium-postgres
         artifacts:
-          - type: zip
+          - type: tgz
             url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.7.0.Final/debezium-connector-postgres-2.7.0.Final-plugin.tar.gz
       - name: jdbc
         artifacts:
