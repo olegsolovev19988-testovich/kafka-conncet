@@ -27,11 +27,11 @@ spec:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 200m
+      memory: 512Mi
     limits:
-      cpu: "1"
-      memory: 1Gi
+      cpu: "2"
+      memory: 2Gi
 
   metricsConfig:
     type: jmxPrometheusExporter
