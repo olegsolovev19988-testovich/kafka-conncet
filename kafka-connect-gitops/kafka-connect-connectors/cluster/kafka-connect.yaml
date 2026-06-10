@@ -8,9 +8,7 @@ spec:
   version: 4.1.0
   replicas: 1
   image: docker.io/oesolovev/kafka-connect:1.0.0
-  imagePullSecrets:
-    - name: dockerhub-credentials
-  
+
   bootstrapServers: 10.0.2.9:9092
   groupId: connect-cluster
   offsetStorageTopic: connect-offsets
@@ -50,6 +48,8 @@ spec:
 
   template:
     pod:
+      imagePullSecrets:
+        - name: dockerhub-credentials
       metadata:
         annotations:
           prometheus.io/scrape: "true"
