@@ -26,11 +26,6 @@ spec:
           - type: zip
             url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.4.2.Final/debezium-connector-postgres-2.4.2.Final-plugin.zip
 
-      - name: jdbc
-        artifacts:
-          - type: zip
-            url: https://packages.confluent.io/maven/io/confluent/kafka-connect-jdbc/10.7.13/kafka-connect-jdbc-10.7.13.zip
-
   config:
     offset.storage.replication.factor: 1
     config.storage.replication.factor: 1
