@@ -1,0 +1,23 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: debezium-opws-postgres
+  labels:
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.debezium.connector.postgresql.PostgresConnector
+  tasksMax: 1
+  config:
+    database.hostname: opws-postgres.example.com
+    database.port: "5432"
+    database.user: ${secrets:kafka-connect/debezium-opws-postgres:username}
+    database.password: ${secrets:kafka-connect/debezium-opws-postgres:password}
+    database.dbname: opws
+    topic.prefix: opws
+    plugin.name: pgoutput
+    slot.name: debezium_opws_slot
+    publication.name: dbz_opws_publication
+    schema.include.list: public
+    table.include.list: public.orders,public.customers
+    tombstones.on.delete: "false"
+    snapshot.mode: initial

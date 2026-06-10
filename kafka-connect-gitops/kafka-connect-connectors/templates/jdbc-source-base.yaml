@@ -1,0 +1,20 @@
+# Шаблон KafkaConnector для JDBC Source.
+# Скопируйте в connectors/<имя-коннектора>/connector.yaml и замените плейсхолдеры.
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: CHANGE_ME-connector-name
+  labels:
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.confluent.connect.jdbc.JdbcSourceConnector
+  tasksMax: 1
+  config:
+    connection.url: jdbc:mysql://CHANGE_ME-host:3306/CHANGE_ME-db
+    connection.user: ${secrets:CHANGE_ME-namespace/CHANGE_ME-secret:username}
+    connection.password: ${secrets:CHANGE_ME-namespace/CHANGE_ME-secret:password}
+    mode: incrementing
+    incrementing.column.name: id
+    topic.prefix: CHANGE_ME-topic-prefix-
+    table.whitelist: CHANGE_ME_table
+    poll.interval.ms: "5000"
