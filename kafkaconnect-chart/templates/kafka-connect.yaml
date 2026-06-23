@@ -1,0 +1,57 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaConnect
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: {{ .Values.version }}
+  replicas: {{ .Values.replicas }}
+
+  bootstrapServers: {{ join "," .Values.bootstrapServers }}
+  groupId: {{ .Values.groupId }}
+
+  configStorageTopic: {{ .Values.topics.config }}
+  offsetStorageTopic: {{ .Values.topics.offset }}
+  statusStorageTopic: {{ .Values.topics.status }}
+
+  authentication:
+    type: plain
+    username: {{ .Values.auth.username }}
+    passwordSecret:
+      secretName: {{ .Values.auth.secretName }}
+      password: {{ .Values.auth.passwordKey }}
+
+  config:
+    config.storage.replication.factor: {{ .Values.replicationFactor }}
+    offset.storage.replication.factor: {{ .Values.replicationFactor }}
+    status.storage.replication.factor: {{ .Values.replicationFactor }}
+
+    consumer.sasl.mechanism: PLAIN
+    consumer.security.protocol: SASL_PLAINTEXT
+
+    producer.sasl.mechanism: PLAIN
+    producer.security.protocol: SASL_PLAINTEXT
+
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: true
+
+  template:
+    pod:
+      metadata:
+        annotations:
+          prometheus.io/port: {{ .Values.podAnnotations["prometheus.io/port"] | quote }}
+          prometheus.io/path: {{ .Values.podAnnotations["prometheus.io/path"] | quote }}
+          prometheus.io/scheme: {{ .Values.podAnnotations["prometheus.io/scheme"] | quote }}
+          prometheus.io/scrape: {{ .Values.podAnnotations["prometheus.io/scrape"] | quote }}
+
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: {{ .Values.metrics.configMapName }}
+        key: {{ .Values.metrics.configKey }}

@@ -1,0 +1,35 @@
+name: kafka-connect-cluster-sa
+namespace: kafka-sa
+
+replicas: 1
+
+version: 4.1.0
+
+bootstrapServers:
+  - xxx-kafka1-soloviev-test.mhd.local:9093
+  - xxx-kafka2-soloviev-test.mhd.local:9093
+  - xxx-kafka3-soloviev-test.mhd.local:9093
+
+groupId: kafka-connect-sa
+
+topics:
+  config: kafka-connect-sa-configs
+  offset: kafka-connect-sa-offsets
+  status: kafka-connect-sa-status
+
+auth:
+  username: kafka_testers_mhd
+  secretName: kafka-connect-sa-credentials
+  passwordKey: password
+
+replicationFactor: 3
+
+metrics:
+  configMapName: connect-metrics
+  configKey: metrics-config.yml
+
+podAnnotations:
+  prometheus.io/port: "9404"
+  prometheus.io/path: "/metrics"
+  prometheus.io/scheme: "http"
+  prometheus.io/scrape: "true"
