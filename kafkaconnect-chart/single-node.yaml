@@ -1,0 +1,50 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaConnect
+metadata:
+  name: kafka-connect-cluster-sa
+  namespace: kafka-sa
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: 4.1.0
+  replicas: 1
+  bootstrapServers: xxx-kafka1-soloviev-test.mhd.local:9093,xxx-kafka2-soloviev-test.mhd.local:9093,xxx-kafka3-soloviev-test.mhd.local:9093
+  groupId: kafka-connect-sa
+  configStorageTopic: kafka-connect-sa-configs
+  offsetStorageTopic: kafka-connect-sa-offsets
+  statusStorageTopic: kafka-connect-sa-status
+  
+  authentication:
+    type: plain
+    username: kafka_testers_mhd
+    passwordSecret:
+      secretName: kafka-connect-sa-credentials
+      password: password
+  
+  config:
+    config.storage.replication.factor: 3
+    consumer.sasl.mechanism: PLAIN
+    consumer.security.protocol: SASL_PLAINTEXT
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    offset.storage.replication.factor: 3
+    producer.security.protocol: SASL_PLAINTEXT
+    producer.sasl.mechanism: PLAIN
+    status.storage.replication.factor: 3
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: true
+
+  template:
+    pod:
+      metadata:
+        annotations:
+          prometheus.io/port: "9404"
+          prometheus.io/path: "/metrics"
+          prometheus.io/scheme: http
+          prometheus.io/scrape: "true"
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: connect-metrics
+        key: metrics-config.yml
